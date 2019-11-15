@@ -1,0 +1,21 @@
+library(PortfolioAnalytics)
+library(PerformanceAnalytics)
+
+
+# Build Return Series of Portfolio 3/6 Month weight
+
+PF_Return_3_6 <- as.data.frame(matrix(nrow = nrow(one_M_Return)))
+colnames(PF_Return_3_6) <- c("PF 0.5x3M 0.5x6M - Monthly Rebal")
+rownames(PF_Return_3_6) <- rownames(one_M_Return)
+i <- 2
+while (i <= nrow(one_M_Return)) {
+  
+  PF_Return_3_6[i,] = as.matrix(weights_3_6[i-1,]) %*% t(as.matrix(one_M_Return[i,])+1)-1
+  
+  i = i+1
+}
+
+PF_Return_3_6 <- as.xts(PF_Return_3_6)
+
+
+PF_Return_Auto <- Return.portfolio(R = one_M_Return, weights = weights_3_6, verbose = T)
